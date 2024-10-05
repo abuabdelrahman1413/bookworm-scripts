@@ -1,0 +1,81 @@
+#####################
+# Application keybindings #
+#####################
+
+super + b
+    firefox-esr
+    
+super + shift + b
+	firefox-esr -private-window
+
+# rofi launchers
+super + space
+   	rofi -show drun -modi drun -line-padding 4 -hide-scrollbar -show-icons
+   	
+super + shift + Return
+	kitty
+
+	
+# help with shortcuts
+super + h
+	tilix -e ~/.config/suckless/sxhkd/keyhelper.sh
+	
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config'
+# application launchers
+
+super + f
+	thunar
+
+super + e 	
+	geany
+
+super + g
+	gimp
+	
+# super + c
+# 	google-chrome
+	
+super + d
+	Discord
+
+super + o
+	obs
+	
+# Change volume, chunky
+super + Insert
+    ~/scripts/changevolume up
+    
+super + Delete
+	~/scripts/changevolume down
+	
+super + m
+	~/scripts/changevolume mute
+	
+# dedicated volume keys
+{XF86AudioRaiseVolume,XF86AudioLowerVolume}
+	pamixer {-i,-d} 2
+
+# dedicated backlight keys
+{XF86MonBrightnessUp,XF86MonBrightnessDown}
+	xbacklight {+10,-10}
+	
+#########
+# Scrot #
+#########
+super + @Print
+	flameshot gui --path ~/Screenshots/
+
+@Print
+	flameshot full --path ~/Screenshots/
+	
+## redshift
+super + alt + r
+	~/scripts/redshift-on
+	
+super + alt + b
+	~/scripts/redshift-off
+
+super + x 
+	~/scripts/power
