@@ -59,32 +59,15 @@ xdg-user-dirs-update
 mkdir ~/Screenshots/
 
 
-SCRIPT_DIR=~/bookworm-scripts
-REPO_URL=https://github.com/drewgrif/jag_dots.git
-
-# Check if the directory already exists
-if [ -d "$SCRIPT_DIR/jag_dots" ]; then
-    echo "Directory $SCRIPT_DIR/jag_dots already exists."
-else
-    # Clone the repository
-    echo "Cloning jag_dots repository..."
-    git clone $REPO_URL $SCRIPT_DIR/jag_dots
-    if [ $? -eq 0 ]; then
-        echo "Repository cloned successfully."
-    else
-        echo "Error: Failed to clone repository."
-        exit 1
-    fi
-fi
 
 # moving custom config
-\cp -r ~/bookworm-scripts/jag_dots/scripts/ ~
-\cp -r ~/bookworm-scripts/jag_dots/.config/openbox/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/tint2/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/dunst/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/picom/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/kitty/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/backgrounds/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/scripts/ ~
+\cp -r ~/bookworm-scripts/dotfiles/.config/openbox/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/tint2/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/dunst/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/picom/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/kitty/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/backgrounds/ ~/.config/
 
 bash ~/bookworm-scripts/install_scripts/obmenu.sh
 

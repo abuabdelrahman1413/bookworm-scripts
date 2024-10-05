@@ -75,31 +75,17 @@ mkdir -p ~/.config/dk
 rm -rf ~/Downloads/dk
 
 SCRIPT_DIR=~/bookworm-scripts
-REPO_URL=https://github.com/drewgrif/jag_dots.git
+REPO_URL=https://github.com/drewgrif/dotfiles.git
 
-# Check if the directory already exists
-if [ -d "$SCRIPT_DIR/jag_dots" ]; then
-    echo "Directory $SCRIPT_DIR/jag_dots already exists."
-else
-    # Clone the repository
-    echo "Cloning jag_dots repository..."
-    git clone $REPO_URL $SCRIPT_DIR/jag_dots
-    if [ $? -eq 0 ]; then
-        echo "Repository cloned successfully."
-    else
-        echo "Error: Failed to clone repository."
-        exit 1
-    fi
-fi
 
-\cp -r ~/bookworm-scripts/jag_dots/scripts/ ~
-\cp -r ~/bookworm-scripts/jag_dots/.config/dk/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/polybar/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/backgrounds/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/picom/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/rofi/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/kitty/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/dunst/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/scripts/ ~
+\cp -r ~/bookworm-scripts/dotfiles/.config/dk/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/polybar/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/backgrounds/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/picom/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/rofi/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/kitty/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/dunst/ ~/.config/
 
 chmod +x ~/.config/dk/dkrc
 chmod +x ~/.config/dk/polybar-dk

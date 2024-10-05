@@ -102,38 +102,21 @@ EOF
 sudo cp ./temp /usr/share/xsessions/dwm.desktop
 rm ./temp
 
-# Clone or check existing jag_dots repository
-SCRIPT_DIR=~/bookworm-scripts
-REPO_URL=https://github.com/drewgrif/jag_dots.git
-
-if [ -d "$SCRIPT_DIR/jag_dots" ]; then
-    echo "Directory $SCRIPT_DIR/jag_dots already exists."
-else
-    echo "Cloning jag_dots repository..."
-    git clone "$REPO_URL" "$SCRIPT_DIR/jag_dots"
-    if [ $? -eq 0 ]; then
-        echo "Repository cloned successfully."
-    else
-        echo "Error: Failed to clone repository."
-        exit 1
-    fi
-fi
-
 # Copy configuration files
-\cp -r ~/bookworm-scripts/jag_dots/scripts/ ~
-\cp -r ~/bookworm-scripts/jag_dots/.config/dunst/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/kitty/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/rofi/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/picom/ ~/.config/
-\cp -r ~/bookworm-scripts/jag_dots/.config/backgrounds/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/scripts/ ~
+\cp -r ~/bookworm-scripts/dotfiles/.config/dunst/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/kitty/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/rofi/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/picom/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/backgrounds/ ~/.config/
 
 # Move autostart script
 mkdir -p ~/.local/share/dwm
-\cp -r ~/bookworm-scripts/jag_dots/.local/share/dwm/autostart.sh ~/.local/share/dwm/
+\cp -r ~/bookworm-scripts/dotfiles/.local/share/dwm/autostart.sh ~/.local/share/dwm/
 chmod +x ~/.local/share/dwm/autostart.sh
 
 # Move patched dwm, slstatus, and st
-\cp -r ~/bookworm-scripts/jag_dots/.config/suckless/ ~/.config/
+\cp -r ~/bookworm-scripts/dotfiles/.config/suckless/ ~/.config/
 
 # Install custom dwm
 cd ~/.config/suckless/dwm
