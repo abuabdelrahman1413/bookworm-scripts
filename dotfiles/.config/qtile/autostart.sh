@@ -11,7 +11,7 @@ feh --bg-fill ~/.config/backgrounds/debdino.png &
 picom --animations -b &
 
 # sxhkd
-sxhkd -c ~/.config/qtile/sxhkd/sxhkdrc &
+# sxhkd -c ~/.config/qtile/sxhkd/sxhkdrc &
 
 # Notifications
 dunst &

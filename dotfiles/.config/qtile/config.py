@@ -39,80 +39,109 @@ def maximize_by_switching_layout(qtile):
     elif current_layout_name == 'max':
         qtile.current_group.layout = 'monadtall'
 
-mod = "mod4"
-# terminal = "kitty"
-
+mod = "mod4"              # Sets mod key to SUPER/WINDOWS
+myTerm = "alacritty"      # My terminal of choice
+myBrowser = "brave"       # My browser of choice
+myEmacs = "emacsclient -c -a 'emacs' " # The space at the end is IMPORTANT!
 colors, backgroundColor, foregroundColor, workspaceColor, chordColor = colors.monokai()
 
 keys = [
-
-# Add dedicated sxhkdrc to autostart.sh script
-
-# CLOSE WINDOW, RELOAD AND QUIT QTILE
-    Key([mod], "q", lazy.window.kill()),
-# Qtile System Actions
-    Key([mod, "shift"], "r", lazy.restart()),
-    Key([mod, "shift"], "q", lazy.shutdown()),
-   #  Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-
-# CHANGE FOCUS USING VIM OR DIRECTIONAL KEYS
-    Key([mod], "Up", lazy.layout.up()),
-    Key([mod], "Down", lazy.layout.down()),
-    Key([mod], "Left", lazy.layout.left()),
-    Key([mod], "Right", lazy.layout.right()),
-
-    Key([mod], "f", maximize_by_switching_layout(), lazy.window.toggle_fullscreen(), desc='toggle fullscreen'),
-
-# MOVE WINDOWS UP OR DOWN,LEFT OR RIGHT USING VIM KEYS
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
-
-# MOVE WINDOWS UP OR DOWN,LEFT OR RIGHT USING DIRECTIONAL KEYS
-    Key([mod, "shift"], "Left", lazy.layout.shuffle_up()),
-    Key([mod, "shift"], "Right", lazy.layout.shuffle_down()),
-
-# RESIZE UP, DOWN, LEFT, RIGHT USING DIRECTIONAL KEYS
-    Key([mod, "control"], "Right",
-        lazy.layout.grow_right(),
-        lazy.layout.grow(),
-        lazy.layout.increase_ratio(),
-        lazy.layout.delete(),
-        ),
-     Key([mod, "control"], "Left",
-        lazy.layout.grow_left(),
-        lazy.layout.shrink(),
-        lazy.layout.decrease_ratio(),
-        lazy.layout.add(),
-        ),
-
-# QTILE LAYOUT KEYS
+    Key([mod], "Return", lazy.spawn(myTerm), desc="Terminal"),
+    Key([mod, "shift"], "Return", lazy.spawn("rofi -show drun"), desc='Run Launcher'),
+    Key([mod], "w", lazy.spawn(myBrowser), desc='Web browser'),
+    Key([mod], "b", lazy.hide_show_bar(position='all'), desc="Toggles the bar to show/hide"),
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
+    Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
 
-# TOGGLE FLOATING LAYOUT
-    Key([mod, "shift"], "space", lazy.window.toggle_floating()),
-	Key([mod, "shift"], "z", lazy.layout.normalize(), desc="Reset all window sizes"),
+    # Switch between windows
+    # Some layouts like 'monadtall' only need to use j/k to move
+    # through the stack, but other layouts like 'columns' will
+    # require all four directions h/j/k/l to move around.
+    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
+    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
+    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
+    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
+    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+
+    # Move windows between left/right columns or move up/down in current stack.
+    # Moving out of range in Columns layout will create new column.
+    Key([mod, "shift"], "h",
+        lazy.layout.shuffle_left(),
+        lazy.layout.move_left().when(layout=["treetab"]),
+        desc="Move window to the left/move tab left in treetab"),
+
+    Key([mod, "shift"], "l",
+        lazy.layout.shuffle_right(),
+        lazy.layout.move_right().when(layout=["treetab"]),
+        desc="Move window to the right/move tab right in treetab"),
+
+    Key([mod, "shift"], "j",
+        lazy.layout.shuffle_down(),
+        lazy.layout.section_down().when(layout=["treetab"]),
+        desc="Move window down/move down a section in treetab"
+    ),
+    Key([mod, "shift"], "k",
+        lazy.layout.shuffle_up(),
+        lazy.layout.section_up().when(layout=["treetab"]),
+        desc="Move window downup/move up a section in treetab"
+    ),
+
+    # Toggle between split and unsplit sides of stack.
+    # Split = all windows displayed
+    # Unsplit = 1 window displayed, like Max layout, but still with
+    # multiple stack panes
+    Key([mod, "shift"], "space", lazy.layout.toggle_split(), desc="Toggle between split and unsplit sides of stack"),
+
+    # Treetab prompt
+    Key([mod, "shift"], "a", add_treetab_section, desc='Prompt to add new section in treetab'),
+
+    # Grow/shrink windows left/right. 
+    # This is mainly for the 'monadtall' and 'monadwide' layouts
+    # although it does also work in the 'bsp' and 'columns' layouts.
+    Key([mod], "equal",
+        lazy.layout.grow_left().when(layout=["bsp", "columns"]),
+        lazy.layout.grow().when(layout=["monadtall", "monadwide"]),
+        desc="Grow window to the left"
+    ),
+    Key([mod], "minus",
+        lazy.layout.grow_right().when(layout=["bsp", "columns"]),
+        lazy.layout.shrink().when(layout=["monadtall", "monadwide"]),
+        desc="Grow window to the left"
+    ),
+
+    # Grow windows up, down, left, right.  Only works in certain layouts.
+    # Works in 'bsp' and 'columns' layout.
+    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
+    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([mod], "m", lazy.layout.maximize(), desc='Toggle between min and max sizes'),
+    Key([mod], "t", lazy.window.toggle_floating(), desc='toggle floating'),
+    Key([mod], "f", maximize_by_switching_layout(), lazy.window.toggle_fullscreen(), desc='toggle fullscreen'),
+    Key([mod, "shift"], "m", minimize_all(), desc="Toggle hide/show all windows on current group"),
 
     ]
 # end of keys
 
-#groups = [Group(i) for i in ["", "", "", "", "阮", "", "", "", ""]]
-# groups = [Group(i) for i in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]]
-groups = [
-	Group('1', label="1", layout="Columns"),
-	Group('2', label="2", layout="Columns"),
-	Group('3', label="3", layout="Columns"),	
-	Group('4', label="4", layout="Columns"),
-	Group('5', label="5", layout="MonadTall"),
-	Group('6', label="6", layout="MonadTall"),
-	Group('7', label="7", matches=[Match(wm_class='gimp')], layout="MonadTall"),
-	Group('8', label="8", matches=[Match(wm_class='discord')], layout="MonadTall"),
-	Group('9', label="9", matches=[Match(wm_class='obs')],layout="MonadTall"),
-]
+groups = []
+group_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9",]
 
+group_labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9",]
+#group_labels = ["DEV", "WWW", "SYS", "DOC", "VBOX", "CHAT", "MUS", "VID", "GFX",]
+#group_labels = ["", "", "", "", "", "", "", "", "",]
 
-#groups = [Group(i) for i in ["www", "dev", "dir", "txt", "vid", "mus", "gfx", "dis", "obs"]]
-# group_hotkeys = "123456789"
+group_layouts = ["monadtall", "monadtall", "tile", "tile", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall"]
 
+for i in range(len(group_names)):
+    groups.append(
+        Group(
+            name=group_names[i],
+            layout=group_layouts[i].lower(),
+            label=group_labels[i],
+        ))
+ 
 for i in groups:
     keys.extend(
         [
@@ -123,43 +152,87 @@ for i in groups:
                 lazy.group[i.name].toscreen(),
                 desc="Switch to group {}".format(i.name),
             ),
-            # mod1 + shift + letter of group = switch to & move focused window to group
+            # mod1 + shift + letter of group = move focused window to group
             Key(
                 [mod, "shift"],
                 i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
+                lazy.window.togroup(i.name, switch_group=False),
+                desc="Move focused window to group {}".format(i.name),
             ),
-            # Or, use below if you prefer not to switch to that group.
-            # # mod1 + shift + letter of group = move focused window to group
-            # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
-            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 
 # Define layouts and layout themes
 layout_theme = {
-        "margin":20,
-        "border_width": 4,
+        "margin":8,
+        "border_width": 2,
         "border_focus": colors[3],
         "border_normal": colors[1]
     }
+###### Drew
+# layouts = [
+#     layout.MonadTall(**layout_theme),
+#     layout.Columns(**layout_theme,num_columns=3),
+#     layout.Bsp(**layout_theme),
+#     layout.Floating(**layout_theme),
+#     layout.Spiral(**layout_theme),
+#     layout.RatioTile(**layout_theme),
+#     layout.Max(**layout_theme)
+# ]
+
+##### DT
 
 layouts = [
+    #layout.Bsp(**layout_theme),
+    #layout.Floating(**layout_theme)
+    #layout.RatioTile(**layout_theme),
+    #layout.VerticalTile(**layout_theme),
+    #layout.Matrix(**layout_theme),
     layout.MonadTall(**layout_theme),
-    layout.Columns(**layout_theme,num_columns=3),
-    layout.Bsp(**layout_theme),
-    layout.Floating(**layout_theme),
-    layout.Spiral(**layout_theme),
-    layout.RatioTile(**layout_theme),
-    layout.Max(**layout_theme)
+    #layout.MonadWide(**layout_theme),
+    layout.Tile(
+         shift_windows=True,
+         border_width = 0,
+         margin = 0,
+         ratio = 0.335,
+         ),
+    layout.Max(
+         border_width = 0,
+         margin = 0,
+         ),
+    #layout.Stack(**layout_theme, num_stacks=2),
+    #layout.Columns(**layout_theme),
+    #layout.TreeTab(
+    #     font = "Ubuntu Bold",
+    #     fontsize = 11,
+    #     border_width = 0,
+    #     bg_color = colors[0],
+    #     active_bg = colors[8],
+    #     active_fg = colors[2],
+    #     inactive_bg = colors[1],
+    #     inactive_fg = colors[0],
+    #     padding_left = 8,
+    #     padding_x = 8,
+    #     padding_y = 6,
+    #     sections = ["ONE", "TWO", "THREE"],
+    #     section_fontsize = 10,
+    #     section_fg = colors[7],
+    #     section_top = 15,
+    #     section_bottom = 15,
+    #     level_shift = 8,
+    #     vspace = 3,
+    #     panel_width = 240
+    #     ),
+    #layout.Zoomy(**layout_theme),
 ]
+
+
 widget_defaults = dict(
-	font='Roboto Mono Nerd Font',
+	font='JetBrains Mono Nerd Font',
     background=colors[0],
     foreground=colors[2],
     fontsize=14,
-    padding=6,
+    padding=5,
 )
 extension_defaults = widget_defaults.copy()
 separator = widget.Sep(size_percent=50, foreground=colors[3], linewidth =1, padding =10)
