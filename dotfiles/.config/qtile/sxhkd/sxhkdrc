@@ -28,8 +28,8 @@ super + h
 
 # application launchers
 
-super + f
-	thunar
+#super + f
+#	thunar
 
 super + e 	
 	geany

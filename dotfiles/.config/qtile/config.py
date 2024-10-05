@@ -1,6 +1,6 @@
 # Copyright (c) 2024 JustAGuyLinux
 
-from libqtile import bar, layout, widget
+from libqtile import bar, layout, widget, hook, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
@@ -9,11 +9,35 @@ import subprocess
 from hijri_date import hijri_date
 from libqtile import hook
 import colors
+from qtile_extras import widget
+from qtile_extras.widget.decorations import BorderDecoration
 
 @hook.subscribe.startup_once
 def autostart():
    home = os.path.expanduser('~/.config/qtile/autostart.sh')
    subprocess.run([home])
+
+# Allows you to input a name when adding treetab section.
+@lazy.layout.function
+def add_treetab_section(layout):
+    prompt = qtile.widgets_map["prompt"]
+    prompt.start_input("Section name: ", layout.cmd_add_section)
+
+# A function for hide/show all the windows in a group
+@lazy.function
+def minimize_all(qtile):
+    for win in qtile.current_group.windows:
+        if hasattr(win, "toggle_minimize"):
+            win.toggle_minimize()
+           
+# A function for toggling between MAX and MONADTALL layouts
+@lazy.function
+def maximize_by_switching_layout(qtile):
+    current_layout_name = qtile.current_group.layout.name
+    if current_layout_name == 'monadtall':
+        qtile.current_group.layout = 'max'
+    elif current_layout_name == 'max':
+        qtile.current_group.layout = 'monadtall'
 
 mod = "mod4"
 # terminal = "kitty"
@@ -37,6 +61,7 @@ keys = [
     Key([mod], "Left", lazy.layout.left()),
     Key([mod], "Right", lazy.layout.right()),
 
+    Key([mod], "f", maximize_by_switching_layout(), lazy.window.toggle_fullscreen(), desc='toggle fullscreen'),
 
 # MOVE WINDOWS UP OR DOWN,LEFT OR RIGHT USING VIM KEYS
     Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
