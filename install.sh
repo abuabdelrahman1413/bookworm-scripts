@@ -23,13 +23,6 @@ fi
 echo "Git is installed. Continuing with the script..."
 # Add further commands here after ensuring Git is installed
 
-
-
-# Clone the repository into the home directory
-git clone https://github.com/drewgrif/bookworm-scripts ~/bookworm-scripts
-git clone https://github.com/drewgrif/jag_dots ~/bookworm-scripts/jag_dots
-
-
 clear
 echo "
  +-+-+-+-+-+-+-+-+-+-+-+-+-+ 
